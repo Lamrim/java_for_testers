@@ -5,9 +5,9 @@ import ru.stqa.geometry.figures.Square;
 
 public class Geometry {
     public static void main(String[] args) {
-        Square.printSquareArea(3.);
-        Square.printSquareArea(2.75);
+        Square.printArea(3.);
+        Square.printArea(2.75);
 
-        Rectangle.printRectangleArea(3., 5.7);
+        Rectangle.printArea(3., 5.7);
     }
 }
