@@ -14,7 +14,6 @@ public class TriangleTests {
         Assertions.assertEquals(24.3, new Triangle(5., 7.3, 12.).perimeter());
         Assertions.assertEquals(2.55, new Triangle(0.98, 1.2, 0.37).perimeter());
     }
-
     @Test
     void cannotCreateTriangle() {
         try {
@@ -53,5 +52,27 @@ public class TriangleTests {
             //OK
         }
 
+    }
+
+    @Test
+    void testEquality() {
+        var triangle1 = new Triangle(5., 7., 3.);
+        var triangle2 = new Triangle(5., 3., 7.);
+        Assertions.assertEquals(triangle1, triangle2);
+
+        var triangle3 = new Triangle(5., 7., 3.);
+        var triangle4 = new Triangle(7., 5., 3.);
+        Assertions.assertEquals(triangle3, triangle4);
+
+        var triangle5 = new Triangle(3., 7., 5.);
+        var triangle6 = new Triangle(7., 3., 5.);
+        Assertions.assertEquals(triangle5, triangle6);
+    }
+
+    @Test
+    void testNotEquality() {
+        var triangle1 = new Triangle(5.2, 7., 3.);
+        var triangle2 = new Triangle(5., 3., 7.);
+        Assertions.assertNotEquals(triangle1, triangle2);
     }
 }
