@@ -3,9 +3,17 @@ package ru.stqa.geometry.figures;
 public class Triangle {
     double a; double b; double c;
     public Triangle(double a, double b, double c) {
-        this.a = a;
-        this.b = b;
-        this.c = c;
+        if (a<0. || b<0. || c<0.) {
+            throw new IllegalArgumentException("Triangles side cannot be negative");
+        }
+        if ((a+b)>c & (a+c)>b & (b+c)>a) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
+        else {
+            throw new IllegalArgumentException("Triangle is not exists");
+        }
     }
 
     public boolean triangleExists() {
