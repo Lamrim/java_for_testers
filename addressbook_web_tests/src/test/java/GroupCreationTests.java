@@ -1,17 +1,23 @@
+import model.GroupData;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 
 public class GroupCreationTests extends TestBase {
 
     @Test
     public void canCreateGroup() {
         openGroupsPage();
-        createGroup("name", "header", "footer");
+        createGroup(new GroupData("name", "header", "footer"));
     }
 
     @Test
     public void canCreateGroupWithEmptyName() {
         openGroupsPage();
-        createGroup("", "header", "footer");
+        createGroup(new GroupData());
+    }
+
+    @Test
+    public void canCreateGroupWithNameOnly() {
+        openGroupsPage();
+        createGroup(new GroupData().withName("some name"));
     }
 }
