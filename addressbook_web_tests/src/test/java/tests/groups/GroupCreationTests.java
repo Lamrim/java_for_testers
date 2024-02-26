@@ -1,7 +1,8 @@
-package tests;
+package tests.groups;
 
 import model.GroupData;
 import org.junit.jupiter.api.Test;
+import tests.TestBase;
 
 public class GroupCreationTests extends TestBase {
 
