@@ -9,7 +9,7 @@ public class ContactHelper extends HelperBase {
         super(manager);
     }
 
-    public void createOneContact(ContactData contact) {
+    public void createContact(ContactData contact) {
         openHomePage();
         initContactCreation();
         fillContactForm();
@@ -23,7 +23,21 @@ public class ContactHelper extends HelperBase {
         fillContactForm();
         submitContactCreation();
         addNextContact();
+        fillContactForm();
+        submitContactCreation();
         returnToHomePage();
+    }
+
+    public void removeContact() {
+        openHomePage();
+        selectContact();
+        removeSelectedContacts();
+    }
+
+    public void removeAllContacts() {
+        openHomePage();
+        selectAllContacts();
+        removeSelectedContacts();
     }
 
 
@@ -53,4 +67,20 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("add next"));
     }
 
+    public boolean isContactPresent() {
+        openHomePage();
+        return manager.IsElementPresent(By.name("selected[]"));
+    }
+
+    public void removeSelectedContacts() {
+        click(By.xpath("//input[@value='Delete']"));
+    }
+
+    private void selectContact() {
+        click(By.name("selected[]"));
+    }
+
+    private void selectAllContacts() {
+        click(By.id("MassCB"));
+    }
 }
