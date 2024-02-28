@@ -12,18 +12,20 @@ public class ContactHelper extends HelperBase {
     public void createContact(ContactData contact) {
         openHomePage();
         initContactCreation();
-        fillContactForm();
+        fillContactForm(contact);
         submitContactCreation();
         returnToHomePage();
     }
 
-    public void createTwoContacts(ContactData contact) {
+    public void createFewContacts(ContactData contact) {
         openHomePage();
         initContactCreation();
-        fillContactForm();
-        submitContactCreation();
-        addNextContact();
-        fillContactForm();
+        for (int i = 0; i < 3; i++) {
+            fillContactForm(contact);
+            submitContactCreation();
+            addNextContact();
+        }
+        fillContactForm(contact);
         submitContactCreation();
         returnToHomePage();
     }
@@ -51,8 +53,12 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("add new"));
     }
 
-    private void fillContactForm() {
-        type(By.name("firstname"), "first name");
+    private void fillContactForm(ContactData contact) {
+        type(By.name("firstname"), contact.firstName());
+        type(By.name("lastname"), contact.lastName());
+        type(By.name("address"), contact.address());
+        type(By.name("email"), contact.email1());
+        type(By.name("mobile"), contact.mobilePhone());
     }
 
     private void submitContactCreation() {
