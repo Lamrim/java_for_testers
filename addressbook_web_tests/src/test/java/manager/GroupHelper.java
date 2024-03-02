@@ -52,10 +52,10 @@ public class GroupHelper extends HelperBase {
         }
     }
 
-    public boolean isGroupPresent() {
-        openGroupsPage();
-        return manager.IsElementPresent(By.name("selected[]"));
-    }
+//    public boolean isGroupPresent() {
+//        openGroupsPage();
+//        return manager.IsElementPresent(By.name("selected[]"));
+//    }
 
     private void returnToGroupsPage() {
         click(By.linkText("group page"));
@@ -71,7 +71,6 @@ public class GroupHelper extends HelperBase {
         type(By.name("group_footer"), group.footer());
     }
 
-
     private void initGroupModification() {
         click(By.name("edit"));
     }
@@ -80,5 +79,8 @@ public class GroupHelper extends HelperBase {
         click(By.name("selected[]"));
     }
 
-
+    public int getCount() {
+        openGroupsPage();
+        return manager.driver.findElements(By.name("selected[]")).size();
+    }
 }
