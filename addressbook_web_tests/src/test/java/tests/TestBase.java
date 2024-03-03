@@ -17,16 +17,13 @@ public class TestBase {
         app.init(System.getProperty("browser", "chrome"));
     }
 
-    public String randomString(int length) {
-        var result = "";
+    public static String randomString(int length) {
+        StringBuilder result = new StringBuilder();
         var rnd = new Random();
 
-        for(int i = 0; i < length; i++) {
-            result = result + (char)('a' + rnd.nextInt(26));
+        for (int i = 0; i < length; i++) {
+            result.append((char) ('a' + rnd.nextInt(26)));
         }
-
-        return result;
-
+        return result.toString();
     }
-
 }
