@@ -17,10 +17,10 @@ public class ContactHelper extends HelperBase {
         returnToHomePage();
     }
 
-    public void createFewContacts(ContactData contact) {
+    public void createChainOfContacts(ContactData contact) {
         openHomePage();
         initContactCreation();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             fillContactForm(contact);
             submitContactCreation();
             addNextContact();
@@ -88,5 +88,10 @@ public class ContactHelper extends HelperBase {
 
     private void selectAllContacts() {
         click(By.id("MassCB"));
+    }
+
+    public int getCount() {
+        openHomePage();
+        return manager.driver.findElements(By.name("selected[]")).size();
     }
 }
