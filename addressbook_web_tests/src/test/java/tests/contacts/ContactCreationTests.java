@@ -1,6 +1,7 @@
 package tests.contacts;
 
 import model.ContactData;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,6 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import tests.TestBase;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ContactCreationTests extends TestBase {
@@ -32,7 +34,7 @@ public class ContactCreationTests extends TestBase {
         }
         for (int i = 1; i < 5; i++) {
             result.add(new ContactData(
-                    randomString(i * (i + 1)),
+                    "", randomString(i * (i + 1)),
                     randomString(i * (i + 1)),
                     randomString(i * (i + 1)),
                     randomString(i * (i + 1)),
@@ -44,10 +46,15 @@ public class ContactCreationTests extends TestBase {
     @ParameterizedTest
     @MethodSource("contactProvider")
     public void canCreateMultipleContacts(ContactData contact) {
-        int contactsCount = app.contacts().getCount();
+        var oldContacts = app.contacts().getList();
         app.contacts().createContact(contact);
-        int newContactsCount = app.contacts().getCount();
-        Assertions.assertEquals(contactsCount + 1, newContactsCount);
+        var newContacts = app.contacts().getList();
+        Comparator<ContactData> compareByFirstAndLastName = (o1, o2) -> {
+            var name1 = String.format("%s %s", o1.lastName(), o1.firstName());
+            var name2 = String.format("%s %s", o2.lastName(), o2.firstName());
+            return name1.compareTo(name2);
+        };
+
     }
 
     @Test

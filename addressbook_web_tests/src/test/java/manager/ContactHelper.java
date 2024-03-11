@@ -1,7 +1,10 @@
 package manager;
 
 import model.ContactData;
+import model.GroupData;
 import org.openqa.selenium.By;
+
+import java.util.ArrayList;
 
 public class ContactHelper extends HelperBase {
 
@@ -93,5 +96,21 @@ public class ContactHelper extends HelperBase {
     public int getCount() {
         openHomePage();
         return manager.driver.findElements(By.name("selected[]")).size();
+    }
+
+    public Object getList() {
+        openHomePage();
+        var contacts = new ArrayList<ContactData>();
+        var rows = manager.driver.findElements(By.cssSelector("tr.entry"));
+        for (var row : rows) {
+            var id = row.findElement(By.xpath("/td[1]/input")).getAttribute("id");
+            var lastName = row.findElement(By.xpath("/td[2]")).getText();
+            var firstName = row.findElement(By.xpath("/td[3]")).getText();
+            contacts.add(new ContactData()
+                    .withId(id)
+                    .withLastName(lastName)
+                    .withFirstName(firstName));
+        }
+        return contacts;
     }
 }
