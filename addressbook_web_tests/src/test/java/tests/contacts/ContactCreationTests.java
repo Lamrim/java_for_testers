@@ -1,7 +1,6 @@
 package tests.contacts;
 
 import model.ContactData;
-import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -49,12 +48,21 @@ public class ContactCreationTests extends TestBase {
         var oldContacts = app.contacts().getList();
         app.contacts().createContact(contact);
         var newContacts = app.contacts().getList();
-        Comparator<ContactData> compareByFirstAndLastName = (o1, o2) -> {
-            var name1 = String.format("%s %s", o1.lastName(), o1.firstName());
-            var name2 = String.format("%s %s", o2.lastName(), o2.firstName());
-            return name1.compareTo(name2);
-        };
+        Comparator<ContactData> compareById = (o1, o2) ->
+                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
 
+        newContacts.sort(compareById);
+
+        var expectedList = new ArrayList<>(oldContacts);
+        expectedList.add(contact.withId(newContacts.getLast().id())
+                .withFirstName(newContacts.getLast().firstName())
+                .withLastName(newContacts.getLast().lastName())
+                .withAddress(newContacts.getLast().address())
+                .withEmail1(newContacts.getLast().email1())
+                .withMobilePhone(newContacts.getLast().mobilePhone()));
+
+        expectedList.sort(compareById);
+        Assertions.assertEquals(newContacts, expectedList);
     }
 
     @Test

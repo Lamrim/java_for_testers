@@ -1,7 +1,6 @@
 package manager;
 
 import model.ContactData;
-import model.GroupData;
 import org.openqa.selenium.By;
 
 import java.util.ArrayList;
@@ -76,11 +75,6 @@ public class ContactHelper extends HelperBase {
         click(By.linkText("add next"));
     }
 
-    public boolean isContactPresent() {
-        openHomePage();
-        return manager.IsElementPresent(By.name("selected[]"));
-    }
-
     public void removeSelectedContacts() {
         click(By.xpath("//input[@value='Delete']"));
     }
@@ -98,18 +92,24 @@ public class ContactHelper extends HelperBase {
         return manager.driver.findElements(By.name("selected[]")).size();
     }
 
-    public Object getList() {
+    public ArrayList<ContactData> getList() {
         openHomePage();
         var contacts = new ArrayList<ContactData>();
-        var rows = manager.driver.findElements(By.cssSelector("tr.entry"));
+        var rows = manager.driver.findElements(By.xpath("//table/tbody/tr[@name='entry']"));
         for (var row : rows) {
-            var id = row.findElement(By.xpath("/td[1]/input")).getAttribute("id");
-            var lastName = row.findElement(By.xpath("/td[2]")).getText();
-            var firstName = row.findElement(By.xpath("/td[3]")).getText();
+            var id = row.findElement(By.name("selected[]")).getAttribute("id");
+            var lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
+            var firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
+            var address = row.findElement(By.cssSelector("td:nth-child(4)")).getText();
+            var email1 = row.findElement(By.cssSelector("td:nth-child(5)")).getText();
+            var mobilePhone = row.findElement(By.cssSelector("td:nth-child(6)")).getText();
             contacts.add(new ContactData()
                     .withId(id)
                     .withLastName(lastName)
-                    .withFirstName(firstName));
+                    .withFirstName(firstName)
+                    .withAddress(address)
+                    .withEmail1(email1)
+                    .withMobilePhone(mobilePhone));
         }
         return contacts;
     }
