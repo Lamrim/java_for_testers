@@ -44,6 +44,13 @@ public class ContactHelper extends HelperBase {
         removeSelectedContacts();
     }
 
+    public void modifyContact(ContactData contact, ContactData modifiedData) {
+        openHomePage();
+        initContactModification(contact);
+        fillContactForm(modifiedData);
+        submitContactModification();
+        returnToHomePage();
+    }
 
     private void openHomePage() {
         if (!manager.IsElementPresent(By.name("MainForm"))) {
@@ -83,6 +90,14 @@ public class ContactHelper extends HelperBase {
         click(By.cssSelector(String.format("input[value='%s']", contact.id())));
     }
 
+    private void initContactModification(ContactData contact) {
+        click(By.xpath(String.format("//a[@href='edit.php?id=%s']", contact.id())));
+    }
+
+    private void submitContactModification() {
+        click(By.name("update"));
+    }
+
     private void selectAllContacts() {
         click(By.id("MassCB"));
     }
@@ -113,4 +128,5 @@ public class ContactHelper extends HelperBase {
         }
         return contacts;
     }
+
 }
