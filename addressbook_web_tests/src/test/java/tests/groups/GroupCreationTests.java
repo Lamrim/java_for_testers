@@ -2,7 +2,6 @@ package tests.groups;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import common.CommonFunctions;
 import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,24 +18,16 @@ public class GroupCreationTests extends TestBase {
 
     public static List<GroupData> groupProvider() throws IOException {
         var result = new ArrayList<GroupData>();
-//        for (var name : List.of("", "name")) {
-//            for (var header : List.of("", "header")) {
-//                for (var footer : List.of("", "footer")) {
-//                    result.add(new GroupData().
-//                            withName(name).
-//                            withHeader(header).
-//                            withFooter(footer));
-//                }
-//            }
-//        }
+//
         ObjectMapper mapper = new ObjectMapper();
-        var value = mapper.readValue(new File("groups.json"),  new TypeReference<List<GroupData>>() {});
+        var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {
+        });
         result.addAll(value);
         return result;
     }
 
     public static List<GroupData> negativeGroupProvider() {
-        return new ArrayList<GroupData>(List.of(
+        return new ArrayList<>(List.of(
                 new GroupData("", "name'", "h", "")
         ));
     }
@@ -53,7 +44,7 @@ public class GroupCreationTests extends TestBase {
         newGroups.sort(compareById);
 
         var expectedList = new ArrayList<>(oldGroups);
-        expectedList.add(group.withId(newGroups.get(newGroups.size() - 1).id()).withHeader("").withFooter(""));
+        expectedList.add(group.withId(newGroups.getLast().id()).withHeader("").withFooter(""));
         expectedList.sort(compareById);
         Assertions.assertEquals(newGroups, expectedList);
     }

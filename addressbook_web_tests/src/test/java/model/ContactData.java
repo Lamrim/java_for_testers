@@ -39,6 +39,6 @@ public record ContactData(String id, String firstName, String lastName,
 
     public ContactData withPhoto(String photo) {
         return new ContactData(this.id, this.firstName, this.lastName, this.address,
-                this.email1, this.mobilePhone, photo);
+                this.email1, this.mobilePhone, "");
     }
 }

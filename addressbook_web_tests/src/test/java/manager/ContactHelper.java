@@ -71,6 +71,7 @@ public class ContactHelper extends HelperBase {
         type(By.name("mobile"), contact.mobilePhone());
     }
 
+
     private void submitContactCreation() {
         click(By.name("submit"));
     }
@@ -125,8 +126,7 @@ public class ContactHelper extends HelperBase {
                     .withFirstName(firstName)
                     .withAddress(address)
                     .withEmail1(email1)
-                    .withMobilePhone(mobilePhone)
-                    .withPhoto(""));
+                    .withMobilePhone(mobilePhone));
         }
         return contacts;
     }
