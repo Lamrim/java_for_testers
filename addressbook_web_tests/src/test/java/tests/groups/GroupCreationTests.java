@@ -2,6 +2,7 @@ package tests.groups;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.CommonFunctions;
 import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +19,6 @@ public class GroupCreationTests extends TestBase {
 
     public static List<GroupData> groupProvider() throws IOException {
         var result = new ArrayList<GroupData>();
-//
         ObjectMapper mapper = new ObjectMapper();
         var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {
         });
@@ -31,6 +31,15 @@ public class GroupCreationTests extends TestBase {
                 new GroupData("", "name'", "h", "")
         ));
     }
+
+    public static List<GroupData> singleRandomGroupProvider() {
+        return List.of(new GroupData()
+                .withName(CommonFunctions.randomString(7))
+                .withHeader(CommonFunctions.randomString(7))
+                .withFooter(CommonFunctions.randomString(7)));
+    }
+
+
 
     @ParameterizedTest
     @MethodSource("groupProvider")
@@ -57,4 +66,22 @@ public class GroupCreationTests extends TestBase {
         var newGroups = app.groups().getList();
         Assertions.assertEquals(newGroups, oldGroups);
     }
+
+    @ParameterizedTest
+    @MethodSource("singleRandomGroupProvider")
+    public void canCreateSingleGroup(GroupData group) {
+        var oldGroups = app.jdbc().getGroupList();
+        app.groups().createGroup(group);
+        var newGroups = app.jdbc().getGroupList();
+        Comparator<GroupData> compareById = (o1, o2) -> {
+            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        };
+        newGroups.sort(compareById);
+
+        var expectedList = new ArrayList<>(oldGroups);
+        expectedList.add(group.withId(newGroups.getLast().id()));
+        expectedList.sort(compareById);
+        Assertions.assertEquals(newGroups, expectedList);
+    }
+
 }
