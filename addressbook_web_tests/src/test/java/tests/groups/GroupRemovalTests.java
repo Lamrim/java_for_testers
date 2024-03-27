@@ -12,7 +12,7 @@ public class GroupRemovalTests extends TestBase {
     @Test
     public void canRemoveGroup() {
         if (app.hbm().getGroupCount() == 0) {
-            app.hbm().createGroup(new GroupData("", "group1", "header", "footer"));
+            app.hbm().createGroup(new GroupData());
         }
         var oldGroups = app.hbm().getGroupList();
         var rnd = new Random();
@@ -27,7 +27,7 @@ public class GroupRemovalTests extends TestBase {
     @Test
     void canRemoveAllGroups() {
         if (app.hbm().getGroupCount() == 0) {
-            app.hbm().createGroup(new GroupData("", "group1", "header", "footer"));
+            app.hbm().createGroup(new GroupData());
         }
         app.groups().removeAllGroups();
         Assertions.assertEquals(0, app.hbm().getGroupCount());

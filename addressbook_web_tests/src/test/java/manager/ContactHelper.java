@@ -53,9 +53,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void openHomePage() {
-        if (!manager.IsElementPresent(By.name("MainForm"))) {
-            click(By.linkText("home"));
-        }
+        click(By.linkText("home"));
     }
 
     private void initContactCreation() {

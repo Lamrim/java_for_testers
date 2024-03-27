@@ -13,10 +13,10 @@ public class ContactModificationTests extends TestBase {
 
     @Test
     public void canModifyContact() {
-        if (app.contacts().getCount() == 0) {
-            app.contacts().createContact(new ContactData());
+        if (app.hbm().getContactCount() == 0) {
+            app.hbm().createContact(new ContactData());
         }
-        var oldContacts = app.contacts().getList();
+        var oldContacts = app.hbm().getContactList();
         var rnd = new Random();
         var index = rnd.nextInt(oldContacts.size());
         var testData = new ContactData()
@@ -28,7 +28,7 @@ public class ContactModificationTests extends TestBase {
 
         app.contacts().modifyContact(oldContacts.get(index), testData);
 
-        var newContacts = app.contacts().getList();
+        var newContacts = app.hbm().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.set(index, testData.withId(oldContacts.get(index).id()));
 
