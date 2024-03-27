@@ -44,8 +44,7 @@ public class ContactCreationTests extends TestBase {
         var oldContacts = app.hbm().getContactList();
         app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
-        Comparator<ContactData> compareById = (o1, o2) ->
-                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        Comparator<ContactData> compareById = getCompareById();
 
         newContacts.sort(compareById);
 
@@ -62,8 +61,7 @@ public class ContactCreationTests extends TestBase {
         var oldContacts = app.hbm().getContactList();
         app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
-        Comparator<ContactData> compareById = (o1, o2) ->
-                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        Comparator<ContactData> compareById = getCompareById();
 
         newContacts.sort(compareById);
 
@@ -74,8 +72,34 @@ public class ContactCreationTests extends TestBase {
         Assertions.assertEquals(newContacts, expectedList);
     }
 
+    @ParameterizedTest
+    @MethodSource("singleRandomContactProvider")
+    void canCreateContactInGroup(ContactData contact) {
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(new GroupData());
+        }
+        var group = app.hbm().getGroupList().getFirst();
+
+        var oldRelated = app.hbm().getContactsInGroup(group);
+        app.contacts().createContact(contact, group);
+        var newRelated = app.hbm().getContactsInGroup(group);
+        Comparator<ContactData> compareById = getCompareById();
+        newRelated.sort(compareById);
+        var expectedRelated = new ArrayList<>(oldRelated);
+        expectedRelated.add(contact.withId(newRelated.getLast().id()));
+
+        Assertions.assertEquals(newRelated, expectedRelated);
+
+    }
+
     @Test
     public void canCreateChainOfContacts() {
         app.contacts().createChainOfContacts(new ContactData());
+    }
+
+    private static Comparator<ContactData> getCompareById() {
+        Comparator<ContactData> compareById = (o1, o2) ->
+                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        return compareById;
     }
 }
