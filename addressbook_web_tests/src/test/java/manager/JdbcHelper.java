@@ -17,7 +17,7 @@ public class JdbcHelper extends HelperBase {
         var groups = new ArrayList<GroupData>();
         try (var conn = DriverManager.getConnection("jdbc:mysql://localhost/addressbook", "root", "");
              var statement = conn.createStatement();
-             var result = statement.executeQuery("SELECT group_id, group_name, group_header, group_footer FROM group_list");) {
+             var result = statement.executeQuery("SELECT group_id, group_name, group_header, group_footer FROM group_list")) {
             while (result.next()) {
                 groups.add(new GroupData()
                         .withId(result.getString("group_id"))
@@ -29,5 +29,18 @@ public class JdbcHelper extends HelperBase {
             throw new RuntimeException(e);
         }
         return groups;
+    }
+
+    public void checkConsistency() {
+        try (var conn = DriverManager.getConnection("jdbc:mysql://localhost/addressbook", "root", "");
+             var statement = conn.createStatement();
+             var result = statement.executeQuery("SELECT * FROM address_in_groups ag LEFT JOIN addressbook a on ag.id = a.id WHERE a.id IS NULL")) {
+            if (result.next()) {
+                throw new IllegalStateException("Table address_in_groups contains references to non-existent addresses");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
