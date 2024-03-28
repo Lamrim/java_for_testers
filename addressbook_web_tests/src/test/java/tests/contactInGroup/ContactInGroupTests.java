@@ -8,35 +8,41 @@ import org.junit.jupiter.api.Test;
 import tests.TestBase;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Random;
 
 public class ContactInGroupTests extends TestBase {
 
-//    @Test
-//    void canAddSingleContactInGroup() {
-//        if (app.hbm().getGroupCount() == 0) {
-//            app.hbm().createGroup(new GroupData().withName(CommonFunctions.randomString(7)));
-//        }
-//        if (app.hbm().getContactCount() == 0) {
-//            app.hbm().createContact(new ContactData().withFirstName(CommonFunctions.randomString(7)));
-//        }
-//        var group = app.hbm().getGroupList().getFirst();
-//        var contactList = app.hbm().getContactList();
-//        var oldRelated = app.hbm().getContactsInGroup(group);
-//
-//        app.contacts().addContactInGroup(firstContactNotInGroup, group);
-//        var newRelated = app.hbm().getContactsInGroup(group);
-//        var expectedRelated = new ArrayList<>(oldRelated);
-//        Comparator<ContactData> compareById = getCompareById();
-//        newRelated.sort(compareById);
-//
-//        newRelated.sort(compareById);
-//        expectedRelated.add(newRelated.getLast());
-//        expectedRelated.sort(compareById);
-//
-//        Assertions.assertEquals(newRelated, expectedRelated);
-//    }
+    @Test
+    void canAddSingleContactInGroup() {
+        if (app.hbm().getGroupCount() == 0) {
+            app.hbm().createGroup(new GroupData().withName(CommonFunctions.randomString(7)));
+        }
+        if (app.hbm().getContactCount() == 0) {
+            app.hbm().createContact(new ContactData().withFirstName(CommonFunctions.randomString(7)));
+        }
+        var group = app.hbm().getGroupList().getFirst();
+        var oldRelated = app.hbm().getContactsInGroup(group);
+        var contactList = app.hbm().getContactList();
+
+        var contactWithoutGroup = new ArrayList<>(contactList);
+        contactWithoutGroup.removeAll(oldRelated);
+
+        if (contactWithoutGroup.isEmpty()) {
+            app.hbm().createContact(new ContactData().withFirstName(CommonFunctions.randomString(7)));
+            oldRelated = app.hbm().getContactsInGroup(group);
+            contactList = app.hbm().getContactList();
+            contactWithoutGroup = new ArrayList<>(contactList);
+            contactWithoutGroup.removeAll(oldRelated);
+        }
+
+        app.contacts().addContactInGroup(contactWithoutGroup.getFirst(), group);
+        var newRelated = app.hbm().getContactsInGroup(group);
+        var expectedRelated = new ArrayList<>(oldRelated);
+
+        expectedRelated.add(contactWithoutGroup.getFirst());
+
+        Assertions.assertEquals(newRelated, expectedRelated);
+    }
 
     @Test
     void canRemoveSingleContactFromGroup() {
@@ -62,9 +68,9 @@ public class ContactInGroupTests extends TestBase {
         Assertions.assertEquals(newRelated, expectedRelated);
     }
 
-    private static Comparator<ContactData> getCompareById() {
-        Comparator<ContactData> compareById = (o1, o2) ->
-                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
-        return compareById;
-    }
+//    private static Comparator<ContactData> getCompareById() {
+//        Comparator<ContactData> compareById = (o1, o2) ->
+//                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+//        return compareById;
+//    }
 }
