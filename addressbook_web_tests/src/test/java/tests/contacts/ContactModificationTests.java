@@ -32,11 +32,16 @@ public class ContactModificationTests extends TestBase {
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.set(index, testData.withId(oldContacts.get(index).id()));
 
-        Comparator<ContactData> compareById = (o1, o2) ->
-                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        Comparator<ContactData> compareById = getCompareById();
 
         newContacts.sort(compareById);
         expectedList.sort(compareById);
         Assertions.assertEquals(newContacts, expectedList);
+    }
+
+    private static Comparator<ContactData> getCompareById() {
+        Comparator<ContactData> compareById = (o1, o2) ->
+                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        return compareById;
     }
 }

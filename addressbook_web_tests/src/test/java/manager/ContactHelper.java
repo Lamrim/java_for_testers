@@ -25,13 +25,9 @@ public class ContactHelper extends HelperBase {
         openHomePage();
         initContactCreation();
         fillContactForm(contact);
-        selectGroup(group);
+        selectGroupOnContactCard(group);
         submitContactCreation();
         returnToHomePage();
-    }
-
-    private void selectGroup(GroupData group) {
-        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
     }
 
     public void createChainOfContacts(ContactData contact) {
@@ -65,6 +61,30 @@ public class ContactHelper extends HelperBase {
         fillContactForm(modifiedData);
         submitContactModification();
         returnToHomePage();
+    }
+
+    public void addContactInGroup(ContactData contact, GroupData group) {
+        openHomePage();
+        selectContact(contact);
+        selectGroupOnHomePage(group);
+        addContactToGroup();
+        returnToHomePage();
+    }
+
+    public void removeContactFromGroup(ContactData contact, GroupData group) {
+        openHomePage();
+        selectGroupPage(group);
+        selectContact(contact);
+        sumbitRemovalContactFromGroup();
+        returnToGroupPage(group);
+    }
+
+    private void selectGroupOnContactCard(GroupData group) {
+        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
+    }
+
+    private void selectGroupOnHomePage(GroupData group) {
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
     }
 
     private void openHomePage() {
@@ -117,6 +137,10 @@ public class ContactHelper extends HelperBase {
         click(By.id("MassCB"));
     }
 
+    private void addContactToGroup() {
+        click(By.name("add"));
+    }
+
     public int getCount() {
         openHomePage();
         return manager.driver.findElements(By.name("selected[]")).size();
@@ -142,5 +166,17 @@ public class ContactHelper extends HelperBase {
                     .withMobilePhone(mobilePhone));
         }
         return contacts;
+    }
+
+    private void returnToGroupPage(GroupData group) {
+        click(By.xpath(String.format("//a[@href='./?group=%s']", group.id())));
+    }
+
+    private void sumbitRemovalContactFromGroup() {
+        click(By.name("remove"));
+    }
+
+    private void selectGroupPage(GroupData group) {
+        new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());
     }
 }
