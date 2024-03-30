@@ -14,8 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static common.CommonFunctions.randomString;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Generator {
 
@@ -56,13 +57,17 @@ public class Generator {
 
     }
 
+    private Object generateData(Supplier<Object> dataSupplier) {
+        return Stream.generate(dataSupplier).limit(count).collect(Collectors.toList());
+    }
+
     private Object generateContacts() {
         var result = new ArrayList<ContactData>();
-        for (var firstName : List.of("", "first name")) {
-            for (var lastName : List.of("", "last name")) {
-                for (var address : List.of("", "address")) {
-                    for (var email1 : List.of("", "email1")) {
-                        for (var mobilePhone : List.of("", "7777777")) {
+        for (var firstName : List.of("", CommonFunctions.randomString(7))) {
+            for (var lastName : List.of("", CommonFunctions.randomString(7))) {
+                for (var address : List.of("", CommonFunctions.randomString(7))) {
+                    for (var email1 : List.of("", CommonFunctions.randomString(7))) {
+                        for (var mobilePhone : List.of("", CommonFunctions.randomString(7))) {
                             result.add(new ContactData()
                                     .withFirstName(firstName)
                                     .withLastName(lastName)
@@ -81,31 +86,17 @@ public class Generator {
                     CommonFunctions.randomString(i * (i + 1)),
                     CommonFunctions.randomString(i * (i + 1)),
                     CommonFunctions.randomString(i * (i + 1)),
-                    CommonFunctions.randomFile("./src/test/resources/images")));
+                    CommonFunctions.randomFile("./src/test/resources/images"), "", "", ""));
         }
 
         return result;
     }
 
     private Object generateGroups() {
-        var result = new ArrayList<GroupData>();
-        for (var name : List.of("", "name")) {
-            for (var header : List.of("", "header")) {
-                for (var footer : List.of("", "footer")) {
-                    result.add(new GroupData().
-                            withName(name).
-                            withHeader(header).
-                            withFooter(footer));
-                }
-            }
-        }
-        for (int i = 0; i < count; i++) {
-            result.add(new GroupData()
-                    .withName(randomString(i * 5))
-                    .withHeader(randomString(i * 7))
-                    .withFooter(randomString(i * 8)));
-        }
-        return result;
+        return generateData(() -> new GroupData()
+                .withName(CommonFunctions.randomString(7))
+                .withHeader(CommonFunctions.randomString(7))
+                .withFooter(CommonFunctions.randomString(7)));
     }
 
     private void save(Object data) throws IOException {

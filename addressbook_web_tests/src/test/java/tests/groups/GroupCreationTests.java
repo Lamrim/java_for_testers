@@ -12,8 +12,11 @@ import tests.TestBase;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GroupCreationTests extends TestBase {
 
@@ -32,11 +35,12 @@ public class GroupCreationTests extends TestBase {
         ));
     }
 
-    public static List<GroupData> singleRandomGroupProvider() {
-        return List.of(new GroupData()
+    public static Stream<GroupData> randomGroupProvider() {
+        Supplier<GroupData> randomGroup = () -> new GroupData()
                 .withName(CommonFunctions.randomString(7))
                 .withHeader(CommonFunctions.randomString(7))
-                .withFooter(CommonFunctions.randomString(7)));
+                .withFooter(CommonFunctions.randomString(7));
+        return Stream.generate(randomGroup).limit(3);
     }
 
     @ParameterizedTest
@@ -45,15 +49,9 @@ public class GroupCreationTests extends TestBase {
         var oldGroups = app.hbm().getGroupList();
         app.groups().createGroup(group);
         var newGroups = app.hbm().getGroupList();
-        Comparator<GroupData> compareById = (o1, o2) -> {
-            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
-        };
-        newGroups.sort(compareById);
-
         var expectedList = new ArrayList<>(oldGroups);
         expectedList.add(group.withId(newGroups.getLast().id()));
-        expectedList.sort(compareById);
-        Assertions.assertEquals(newGroups, expectedList);
+        Assertions.assertEquals(Set.copyOf(newGroups), Set.copyOf(expectedList));
     }
 
     @ParameterizedTest
@@ -66,20 +64,15 @@ public class GroupCreationTests extends TestBase {
     }
 
     @ParameterizedTest
-    @MethodSource("singleRandomGroupProvider")
-    public void canCreateSingleGroup(GroupData group) {
+    @MethodSource("randomGroupProvider")
+    public void canCreateRandomGroup(GroupData group) {
         var oldGroups = app.hbm().getGroupList();
         app.groups().createGroup(group);
         var newGroups = app.hbm().getGroupList();
-        Comparator<GroupData> compareById = (o1, o2) -> {
-            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
-        };
-        newGroups.sort(compareById);
-
         var expectedList = new ArrayList<>(oldGroups);
-        expectedList.add(group.withId(newGroups.getLast().id()));
-        expectedList.sort(compareById);
-        Assertions.assertEquals(newGroups, expectedList);
+        var extraGroups = newGroups.stream().filter(g -> !oldGroups.contains(g)).toList();
+        expectedList.add(group.withId(extraGroups.getFirst().id()));
+        Assertions.assertEquals(Set.copyOf(newGroups), Set.copyOf(expectedList));
     }
 
 }

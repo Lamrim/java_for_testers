@@ -1,18 +1,26 @@
 package common;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Random;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CommonFunctions {
     public static String randomString(int length) {
-        StringBuilder result = new StringBuilder();
         var rnd = new Random();
+        Supplier<Integer> randomNumbers = () -> rnd.nextInt(26);
 
-        for (int i = 0; i < length; i++) {
-            result.append((char) ('a' + rnd.nextInt(26)));
-        }
-        return result.toString();
+        var result = Stream.generate(randomNumbers)
+                .limit(length)
+                .map(i -> 'a' + i)
+                .map(Character::toString)
+                .collect(Collectors.joining());
+
+        return result;
     }
 
     public static String randomFile(String dir) {

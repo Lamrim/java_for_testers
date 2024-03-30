@@ -8,8 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateHelper extends HelperBase {
 
@@ -28,12 +28,8 @@ public class HibernateHelper extends HelperBase {
                         .buildSessionFactory();
     }
 
-    static List<GroupData> convertList(List<GroupRecord> records) {
-        List<GroupData> result = new ArrayList<>();
-        for (var record : records) {
-            result.add(convert(record));
-        }
-        return result;
+    static List<GroupData> converGrouptList(List<GroupRecord> records) {
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());
     }
 
     private static GroupData convert(GroupRecord record) {
@@ -49,7 +45,7 @@ public class HibernateHelper extends HelperBase {
     }
 
     public List<GroupData> getGroupList() {
-        return convertList(sessionFactory.fromSession(session -> {
+        return converGrouptList(sessionFactory.fromSession(session -> {
             return session.createQuery("from GroupRecord", GroupRecord.class).list();
         }));
     }
@@ -75,12 +71,7 @@ public class HibernateHelper extends HelperBase {
     }
 
     private List<ContactData> convertContactList(List<ContactRecord> records) {
-        List<ContactData> result = new ArrayList<>();
-        for (var record : records) {
-            result.add(convert(record));
-        }
-        return result;
-
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());
     }
 
     private static ContactRecord convert(ContactData data) {
@@ -89,13 +80,13 @@ public class HibernateHelper extends HelperBase {
             id = "0";
         }
         return new ContactRecord(Integer.parseInt(id), data.firstName(), data.lastName(), data.address(),
-                data.email1(), data.mobilePhone());
+                data.email1(), data.mobilePhone(), data.homePhone(), data.workPhone(), data.secondaryPhone());
     }
 
 
     private static ContactData convert(ContactRecord record) {
         return new ContactData("" + record.id, record.firstname, record.lastname, record.address,
-                record.email, record.mobile, "");
+                record.email, record.mobilePhone, "", record.homePhone, record.workPhone, record.secondaryPhone);
     }
 
     public Long getContactCount() {

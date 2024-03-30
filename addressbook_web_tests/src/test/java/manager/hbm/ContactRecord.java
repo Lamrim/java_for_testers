@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.util.Date;
-
 @Entity
 @Table(name = "addressbook")
 public class ContactRecord {
@@ -17,15 +15,19 @@ public class ContactRecord {
     public String lastname;
     public String address;
     public String email;
-    public String mobile;
+    @Column(name = "mobile")
+    public String mobilePhone;
 
-//    public Date deprecated = new Date();
     public String middlename = "";
     public String nickname = "";
     public String company = "";
     public String title = "";
-    public String home = "";
-    public String work = "";
+    @Column(name = "home")
+    public String homePhone;
+    @Column(name = "work")
+    public String workPhone;
+    @Column(name = "phone2")
+    public String secondaryPhone;
     public String fax = "";
     public String email2 = "";
     public String email3 = "";
@@ -35,12 +37,24 @@ public class ContactRecord {
     public ContactRecord() {
     }
 
-    public ContactRecord(int id, String firstname, String lastname, String address, String email, String mobile) {
+    public ContactRecord(
+            int id,
+            String firstname,
+            String lastname,
+            String address,
+            String email,
+            String mobilePhone,
+            String homePhone,
+            String workPhone,
+            String secondaryPhone) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.address = address;
         this.email = email;
-        this.mobile = mobile;
+        this.mobilePhone = mobilePhone;
+        this.homePhone = homePhone;
+        this.workPhone = workPhone;
+        this.secondaryPhone = secondaryPhone;
     }
 }
