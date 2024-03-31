@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class ContactCreationTests extends TestBase {
 
@@ -44,15 +45,9 @@ public class ContactCreationTests extends TestBase {
         var oldContacts = app.hbm().getContactList();
         app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
-        Comparator<ContactData> compareById = getCompareById();
-
-        newContacts.sort(compareById);
-
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.add(contact.withId(newContacts.getLast().id()).withPhoto(""));
-
-        expectedList.sort(compareById);
-        Assertions.assertEquals(newContacts, expectedList);
+        Assertions.assertEquals(Set.copyOf(newContacts), Set.copyOf(expectedList));
     }
 
     @ParameterizedTest
@@ -61,15 +56,9 @@ public class ContactCreationTests extends TestBase {
         var oldContacts = app.hbm().getContactList();
         app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
-        Comparator<ContactData> compareById = getCompareById();
-
-        newContacts.sort(compareById);
-
         var expectedList = new ArrayList<>(oldContacts);
-        expectedList.add(contact.withId(newContacts.getLast().id()).withPhoto(""));
-
-        expectedList.sort(compareById);
-        Assertions.assertEquals(newContacts, expectedList);
+        expectedList.add(newContacts.getLast());
+        Assertions.assertEquals(Set.copyOf(newContacts), Set.copyOf(expectedList));
     }
 
     @ParameterizedTest
@@ -83,12 +72,10 @@ public class ContactCreationTests extends TestBase {
         var oldRelated = app.hbm().getContactsInGroup(group);
         app.contacts().createContact(contact, group);
         var newRelated = app.hbm().getContactsInGroup(group);
-        Comparator<ContactData> compareById = getCompareById();
-        newRelated.sort(compareById);
         var expectedRelated = new ArrayList<>(oldRelated);
         expectedRelated.add(contact.withId(newRelated.getLast().id()));
 
-        Assertions.assertEquals(newRelated, expectedRelated);
+        Assertions.assertEquals(Set.copyOf(newRelated), Set.copyOf(expectedRelated));
 
     }
 
@@ -97,9 +84,4 @@ public class ContactCreationTests extends TestBase {
         app.contacts().createChainOfContacts(new ContactData());
     }
 
-    private static Comparator<ContactData> getCompareById() {
-        Comparator<ContactData> compareById = (o1, o2) ->
-                Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
-        return compareById;
-    }
 }

@@ -63,30 +63,17 @@ public class Generator {
 
     private Object generateContacts() {
         var result = new ArrayList<ContactData>();
-        for (var firstName : List.of("", CommonFunctions.randomString(7))) {
-            for (var lastName : List.of("", CommonFunctions.randomString(7))) {
-                for (var address : List.of("", CommonFunctions.randomString(7))) {
-                    for (var email1 : List.of("", CommonFunctions.randomString(7))) {
-                        for (var mobilePhone : List.of("", CommonFunctions.randomString(7))) {
-                            result.add(new ContactData()
-                                    .withFirstName(firstName)
-                                    .withLastName(lastName)
-                                    .withAddress(address)
-                                    .withEmail1(email1)
-                                    .withMobilePhone(mobilePhone));
-                        }
-                    }
-                }
-            }
-        }
         for (int i = 1; i <= count; i++) {
-            result.add(new ContactData(
-                    "", CommonFunctions.randomString(i * (i + 1)),
-                    CommonFunctions.randomString(i * (i + 1)),
-                    CommonFunctions.randomString(i * (i + 1)),
-                    CommonFunctions.randomString(i * (i + 1)),
-                    CommonFunctions.randomString(i * (i + 1)),
-                    CommonFunctions.randomFile("./src/test/resources/images"), "", "", ""));
+            result.add(new ContactData()
+                    .withFirstName(CommonFunctions.randomString(i * (i + 1)))
+                    .withLastName(CommonFunctions.randomString(i * (i + 1)))
+                    .withAddress(CommonFunctions.randomString(i * (i + 1)))
+                    .withMobilePhone(CommonFunctions.randomString(i * (i + 1)))
+                    .withHomePhone(CommonFunctions.randomString(i * (i + 1)))
+                    .withWorkPhone(CommonFunctions.randomString(i * (i + 1)))
+                    .withEmail1(CommonFunctions.randomString(i * (i + 1)))
+                    .withEmail2(CommonFunctions.randomString(i * (i + 1)))
+                    .withEmail3(CommonFunctions.randomString(i * (i + 1))));
         }
 
         return result;
