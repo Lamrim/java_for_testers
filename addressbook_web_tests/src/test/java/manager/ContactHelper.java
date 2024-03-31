@@ -93,6 +93,7 @@ public class ContactHelper extends HelperBase {
 
     private void openHomePage() {
         click(By.linkText("home"));
+        new Select(manager.driver.findElement(By.name("group"))).selectByValue("");
     }
 
     private void initContactCreation() {
