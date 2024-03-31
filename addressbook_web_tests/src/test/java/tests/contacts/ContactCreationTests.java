@@ -36,7 +36,11 @@ public class ContactCreationTests extends TestBase {
                 .withLastName(CommonFunctions.randomString(7))
                 .withAddress(CommonFunctions.randomString(7))
                 .withEmail1(CommonFunctions.randomString(7))
-                .withMobilePhone(CommonFunctions.randomString(7)));
+                .withEmail2(CommonFunctions.randomString(7))
+                .withEmail3(CommonFunctions.randomString(7))
+                .withMobilePhone(CommonFunctions.randomString(7))
+                .withHomePhone(CommonFunctions.randomString(7))
+                .withWorkPhone(CommonFunctions.randomString(7)));
     }
 
     @ParameterizedTest
