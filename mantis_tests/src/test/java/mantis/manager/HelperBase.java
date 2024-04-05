@@ -28,6 +28,10 @@ public class HelperBase {
         }
     }
 
+    protected void openLink(String url) {
+        manager.driver().get(url);
+    }
+
     protected boolean isElementPresent(By locator) {
         return !manager.driver().findElements(locator).isEmpty();
     }
