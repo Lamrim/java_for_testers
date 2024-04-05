@@ -14,7 +14,8 @@ public class UserRegistrationTests extends TestBase {
         // создать пользователя на почтовом сервере (JamesHelper)
         var email = String.format("%s@localhost", CommonFunctions.randomString(5));
         var username = CommonFunctions.randomString(7);
-        var password = "password";
+        var password = CommonFunctions.randomString(7);
+        var newPassword = CommonFunctions.randomString(7);
         var url = "";
         app.jamesCli().addUser(email, password);
         // заполнить форму создания (браузер)
@@ -29,9 +30,9 @@ public class UserRegistrationTests extends TestBase {
             url = text.substring(matcher.start(), matcher.end());
         }
         // перейти по ссылке и завершить регистрацию (браузер)
-        app.session().proceedSignUp(url, password);
+        app.session().proceedSignUp(url, newPassword);
         // проверить, что пользователь может залогиниться (HttpSessionHelper)
-        app.http().login(username, password);
+        app.http().login(username, newPassword);
         Assertions.assertTrue(app.http().isLoggedIn());
     }
 }
