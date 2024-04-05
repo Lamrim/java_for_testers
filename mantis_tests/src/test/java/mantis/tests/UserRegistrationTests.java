@@ -34,5 +34,4 @@ public class UserRegistrationTests extends TestBase {
         app.http().login(username, password);
         Assertions.assertTrue(app.http().isLoggedIn());
     }
-
 }
