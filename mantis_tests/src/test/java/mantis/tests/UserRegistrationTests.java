@@ -46,7 +46,7 @@ public class UserRegistrationTests extends TestBase {
         var url = "";
 
         user = app.developerMail().addUser();
-        
+
         var email = String.format("%s@developermail.com", user.name());
         app.user().signUp(user.name(), email);
         var message = app.developerMail().receive(user, Duration.ofSeconds(10));
