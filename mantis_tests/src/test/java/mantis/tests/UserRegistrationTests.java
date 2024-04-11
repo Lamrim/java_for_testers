@@ -6,34 +6,43 @@ import mantis.model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.Duration;
-import java.util.regex.Pattern;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class UserRegistrationTests extends TestBase {
 
     DeveloperMailUser user;
 
-    @Test
-    void canRegisterUser() {
+    public static Stream<UserData> randomUserProvider() {
+        Supplier<UserData> randomGroup = () -> new UserData()
+                .withEmail(String.format("%s@localhost", CommonFunctions.randomString(7)))
+                .withUsername(CommonFunctions.randomString(7))
+                .withRealname(CommonFunctions.randomString(7))
+                .withPassword(CommonFunctions.randomString(7));
+        return Stream.generate(randomGroup).limit(1);
+    }
+
+    @ParameterizedTest
+    @MethodSource("randomUserProvider")
+    void canRegisterUser(UserData user) {
         // создать пользователя на почтовом сервере (JamesHelper)
-        var email = String.format("%s@localhost", CommonFunctions.randomString(5));
-        var username = CommonFunctions.randomString(7);
-        var password = CommonFunctions.randomString(7);
-        var newPassword = CommonFunctions.randomString(7);
         var url = "";
-        app.jamesCli().addUser(email, password);
+        app.jamesCli().addUser(user.email(), user.password());
         // заполнить форму создания (браузер)
-        app.user().signUp(username, email);
+        app.user().signUp(user.username(), user.email());
         // ждем почту (MailHelper)
-        var messages = app.mail().receive(email, password, Duration.ofSeconds(10));
+        var messages = app.mail().receive(user.email(), user.password(), Duration.ofSeconds(10));
         // извлечть ссылку из письма
         var text = messages.getFirst().content();
         url = CommonFunctions.extractUrl(text, url);
         // перейти по ссылке и завершить регистрацию (браузер)
-        app.user().proceedSignUp(url, newPassword);
+        app.user().proceedSignUp(url, user.realname(), user.password());
         // проверить, что пользователь может залогиниться (HttpSessionHelper)
-        app.http().login(username, newPassword);
+        app.http().login(user.username(), user.password());
         Assertions.assertTrue(app.http().isLoggedIn());
     }
 
@@ -49,29 +58,26 @@ public class UserRegistrationTests extends TestBase {
         var message = app.developerMail().receive(user, Duration.ofSeconds(10));
         url = CommonFunctions.extractUrl(message, url);
 
-        app.user().proceedSignUp(url, newPassword);
+        app.user().proceedSignUp(url, CommonFunctions.randomString(5), newPassword);
         app.http().login(user.name(), newPassword);
         Assertions.assertTrue(app.http().isLoggedIn());
     }
 
-    @Test
-    void canRegisterUserWithRestAPI() {
-        var email = String.format("%s@localhost", CommonFunctions.randomString(5));
-        var username = CommonFunctions.randomString(7);
-        var password = CommonFunctions.randomString(7);
-        var newPassword = CommonFunctions.randomString(7);
+    @ParameterizedTest
+    @MethodSource("randomUserProvider")
+    void canRegisterUserWithRestAPI(UserData user) {
         var url = "";
-        app.jamesApi().addUser(email, password);
+        app.jamesApi().addUser(user.email(), user.password());
         app.rest().startRegisterUser(new UserData()
-                .withUsername(username)
-                .withEmail(email));
+                .withUsername(user.username())
+                .withEmail(user.email()));
 
-        var messages = app.mail().receive(email, password, Duration.ofSeconds(60));
+        var messages = app.mail().receive(user.email(), user.password(), Duration.ofSeconds(10));
         var text = messages.getFirst().content();
         url = CommonFunctions.extractUrl(text, url);
 
-        app.user().proceedSignUp(url, newPassword);
-        app.http().login(username, newPassword);
+        app.user().proceedSignUp(url, user.realname(), user.password());
+        app.http().login(user.username(), user.password());
         Assertions.assertTrue(app.http().isLoggedIn());
     }
 

@@ -15,9 +15,9 @@ public class UserHelper extends HelperBase {
     }
 
 
-    public void proceedSignUp(String url, String password) {
+    public void proceedSignUp(String url, String realname, String password) {
         openEditAccountPage(url);
-        fillAccountInformation(password);
+        fillAccountInformation(realname, password);
         submitUpdateUser();
     }
 
@@ -25,8 +25,8 @@ public class UserHelper extends HelperBase {
         openLink(url);
     }
 
-    private void fillAccountInformation(String password) {
-        type(By.id("realname"), CommonFunctions.randomString(5));
+    private void fillAccountInformation(String realname, String password) {
+        type(By.id("realname"), realname);
         type(By.id("password"), password);
         type(By.id("password-confirm"), password);
     }
