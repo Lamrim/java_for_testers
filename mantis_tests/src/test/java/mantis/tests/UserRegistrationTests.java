@@ -2,6 +2,7 @@ package mantis.tests;
 
 import mantis.common.CommonFunctions;
 import mantis.model.DeveloperMailUser;
+import mantis.model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class UserRegistrationTests extends TestBase {
         var password = CommonFunctions.randomString(7);
         var newPassword = CommonFunctions.randomString(7);
         var url = "";
-        app.jamesApi().addUser(email, password);
+        app.jamesCli().addUser(email, password);
         // заполнить форму создания (браузер)
         app.user().signUp(username, email);
         // ждем почту (MailHelper)
@@ -50,6 +51,27 @@ public class UserRegistrationTests extends TestBase {
 
         app.user().proceedSignUp(url, newPassword);
         app.http().login(user.name(), newPassword);
+        Assertions.assertTrue(app.http().isLoggedIn());
+    }
+
+    @Test
+    void canRegisterUserWithRestAPI() {
+        var email = String.format("%s@localhost", CommonFunctions.randomString(5));
+        var username = CommonFunctions.randomString(7);
+        var password = CommonFunctions.randomString(7);
+        var newPassword = CommonFunctions.randomString(7);
+        var url = "";
+        app.jamesApi().addUser(email, password);
+        app.rest().startRegisterUser(new UserData()
+                .withUsername(username)
+                .withEmail(email));
+
+        var messages = app.mail().receive(email, password, Duration.ofSeconds(60));
+        var text = messages.getFirst().content();
+        url = CommonFunctions.extractUrl(text, url);
+
+        app.user().proceedSignUp(url, newPassword);
+        app.http().login(username, newPassword);
         Assertions.assertTrue(app.http().isLoggedIn());
     }
 
