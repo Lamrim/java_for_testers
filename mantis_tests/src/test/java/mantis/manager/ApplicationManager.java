@@ -20,6 +20,7 @@ public class ApplicationManager {
     private DeveloperMailHelper developerMailHelper;
     private UserHelper userHelper;
     private RestApiHelper restHelper;
+    private SoapApiHelper soapHelper;
 
 
     public void init(String browser, Properties properties) {
@@ -110,6 +111,16 @@ public class ApplicationManager {
                 restHelper = new RestApiHelper(this);
             }
             return restHelper;
+        }
+    }
+
+
+    public SoapApiHelper soap() {
+        {
+            if (soapHelper == null) {
+                soapHelper = new SoapApiHelper(this);
+            }
+            return soapHelper;
         }
     }
 
