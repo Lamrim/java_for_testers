@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 public class TestBase {
@@ -14,7 +15,7 @@ public class TestBase {
     protected static ApplicationManager app;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, URISyntaxException {
         if (app == null) {
             var properties = new Properties();
             properties.load(new FileReader(System.getProperty("environment", "local.properties")));
