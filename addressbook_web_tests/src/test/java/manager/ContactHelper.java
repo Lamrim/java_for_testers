@@ -103,7 +103,6 @@ public class ContactHelper extends HelperBase {
     private void fillContactForm(ContactData contact) {
         type(By.name("firstname"), contact.firstName());
         type(By.name("lastname"), contact.lastName());
-        attach(By.name("photo"), String.valueOf(contact.photo()));
         type(By.name("address"), contact.address());
         type(By.name("email"), contact.email());
         type(By.name("email2"), contact.email2());

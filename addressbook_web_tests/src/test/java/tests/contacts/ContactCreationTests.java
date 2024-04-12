@@ -50,7 +50,7 @@ public class ContactCreationTests extends TestBase {
         app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
-        expectedList.add(contact.withId(newContacts.getLast().id()).withPhoto(""));
+        expectedList.add(contact.withId(newContacts.getLast().id()));
         Assertions.assertEquals(Set.copyOf(newContacts), Set.copyOf(expectedList));
     }
 
@@ -61,7 +61,7 @@ public class ContactCreationTests extends TestBase {
         app.contacts().createContact(contact);
         var newContacts = app.hbm().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
-        expectedList.add(newContacts.getLast());
+        expectedList.add(contact.withId(newContacts.getLast().id()));
         Assertions.assertEquals(Set.copyOf(newContacts), Set.copyOf(expectedList));
     }
 

@@ -6,10 +6,12 @@ public record ContactData(
         String lastName,
         String address,
         String email,
-        String email2, String email3, String mobilePhone,
-        String photo,
+        String email2,
+        String email3,
+        String mobilePhone,
         String homePhone,
-        String workPhone
+        String workPhone,
+        String photo
 ) {
 
     public ContactData() {
@@ -67,13 +69,8 @@ public record ContactData(
                 this.email, this.email2, this.email3, this.mobilePhone, homePhone, this.workPhone, this.photo);
     }
 
-//    public ContactData withSecondaryPhone(String secondaryPhone) {
-//        return new ContactData(this.id, this.firstName, this.lastName, this.address,
-//                this.email, this.email2, this.email3, mobilePhone, this.photo, this.homePhone, this.workPhone, secondaryPhone);
-//    }
-
     public ContactData withPhoto(String photo) {
         return new ContactData(this.id, this.firstName, this.lastName, this.address,
-                this.email, this.email2, this.email3, this.mobilePhone, this.homePhone, this.workPhone, "");
+                this.email, this.email2, this.email3, this.mobilePhone, this.homePhone, this.workPhone, photo);
     }
 }

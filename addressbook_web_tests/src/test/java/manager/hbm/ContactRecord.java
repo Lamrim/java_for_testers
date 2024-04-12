@@ -32,6 +32,8 @@ public class ContactRecord {
     public String fax = "";
     public String homepage = "";
 
+    public String photo;
+
 
     public ContactRecord() {
     }
@@ -46,7 +48,8 @@ public class ContactRecord {
             String email3,
             String mobilePhone,
             String homePhone,
-            String workPhone) {
+            String workPhone,
+            String photo) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -57,5 +60,6 @@ public class ContactRecord {
         this.mobilePhone = mobilePhone;
         this.homePhone = homePhone;
         this.workPhone = workPhone;
+        this.photo = photo;
     }
 }

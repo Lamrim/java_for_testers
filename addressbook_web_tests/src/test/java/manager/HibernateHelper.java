@@ -81,13 +81,13 @@ public class HibernateHelper extends HelperBase {
         }
         return new ContactRecord(Integer.parseInt(id), data.firstName(), data.lastName(), data.address(),
                 data.email(), data.email2(), data.email3(), data.mobilePhone(), data.homePhone(),
-                data.workPhone());
+                data.workPhone(), data.photo());
     }
 
 
     private static ContactData convert(ContactRecord record) {
         return new ContactData("" + record.id, record.firstname, record.lastname, record.address,
-                record.email, record.email2, record.email3, record.mobilePhone, "", record.homePhone, record.workPhone);
+                record.email, record.email2, record.email3, record.mobilePhone, record.homePhone, record.workPhone, "");
     }
 
     public Long getContactCount() {

@@ -41,6 +41,5 @@ public class JdbcHelper extends HelperBase {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
